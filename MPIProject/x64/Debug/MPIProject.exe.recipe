@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\maure\Documents\Projects Visual\Mandelbrot\x64\Debug\MPIProject.exe</FullPath>
+      <FullPath>E:\Parallelization-of-Mandelbrot-Fractal\x64\Debug\MPIProject.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
