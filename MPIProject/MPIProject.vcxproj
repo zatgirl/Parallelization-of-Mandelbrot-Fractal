@@ -147,12 +147,15 @@
   <ItemGroup>
     <ClCompile Include="EasyBMP.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MathHelpers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EasyBMP.h" />
     <ClInclude Include="EasyBMP_BMP.h" />
     <ClInclude Include="EasyBMP_DataStructures.h" />
     <ClInclude Include="EasyBMP_VariousBMPutilities.h" />
+    <ClInclude Include="Mandelbrot.h" />
+    <ClInclude Include="MathHelpers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
