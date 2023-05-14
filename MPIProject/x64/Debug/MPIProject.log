@@ -1,1 +1,8 @@
-﻿  MPIProject.vcxproj -> E:\Parallelization-of-Mandelbrot-Fractal\x64\Debug\MPIProject.exe
+﻿  EasyBMP.cpp
+E:\Git\Parallelization-of-Mandelbrot-Fractal\MPIProject\EasyBMP.cpp(994,13): warning C4101: 'ZeroWORD': unreferenced local variable
+  main.cpp
+E:\Git\Parallelization-of-Mandelbrot-Fractal\MPIProject\main.cpp(41,132): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  mandelbrot.cpp
+  MathHelpers.cpp
+  Generating Code...
+  MPIProject.vcxproj -> E:\Git\Parallelization-of-Mandelbrot-Fractal\x64\Debug\MPIProject.exe

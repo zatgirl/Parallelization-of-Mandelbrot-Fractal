@@ -5,9 +5,9 @@
 #include "EasyBMP.h"
 #include "MathHelpers.h"
 #include "Mandelbrot.h"
-#define DEF_MAX_ITERATIONS 2000
-#define DEF_IMAGE_WIDTH    3840
-#define DEF_IMAGE_HEIGHT   2160
+#define DEF_MAX_ITERATIONS 1000
+#define DEF_IMAGE_WIDTH    800
+#define DEF_IMAGE_HEIGHT   600
 
 int main(int argc, char* argv[]) {
     MPI_Init(&argc, &argv);

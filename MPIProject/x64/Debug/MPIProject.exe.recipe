@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>E:\Parallelization-of-Mandelbrot-Fractal\x64\Debug\MPIProject.exe</FullPath>
+      <FullPath>E:\Git\Parallelization-of-Mandelbrot-Fractal\x64\Debug\MPIProject.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
