@@ -1,3 +1,1 @@
-﻿  main.cpp
-E:\Parallelization-of-Mandelbrot-Fractal\MPIProject\main.cpp(68,132): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  MPIProject.vcxproj -> E:\Parallelization-of-Mandelbrot-Fractal\x64\Debug\MPIProject.exe
+﻿  MPIProject.vcxproj -> E:\Parallelization-of-Mandelbrot-Fractal\x64\Debug\MPIProject.exe

@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="EasyBMP.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mandelbrot.cpp" />
     <ClCompile Include="MathHelpers.cpp" />
   </ItemGroup>
   <ItemGroup>

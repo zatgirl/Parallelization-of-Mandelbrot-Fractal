@@ -4,42 +4,10 @@
 #include <vector>
 #include "EasyBMP.h"
 #include "MathHelpers.h"
-#define DEF_MAX_ITERATIONS 1000
-
-/// <summary>
-/// Calcula o número de iterações necessárias para determinar se um ponto do plano complexo
-/// pertence ao conjunto de Mandelbrot, iterando sobre a fórmula z(n+1) = z(n)^2 + c, onde z(0) = c
-/// </summary>
-/// <param name="point"></param>
-/// <param name="maxIterations"></param>
-/// <returns></returns>
-int mandelbrot(const std::complex<double>& point, int maxIterations) {
-    std::complex<double> z = point;
-    for (int i = 0; i < maxIterations; ++i) {
-        if (std::abs(z) > 2.0) {
-            return i;
-        }
-        z = z * z + point;
-    }
-    return maxIterations;
-}
-
-std::vector<int> calculate_mandelbrot(Vector2 start, Vector2 end, Int2 imgDim, int max_iter, int start_row, int end_row) {
-    Vector2 step = Vector2(((end.x - start.x) / imgDim.x), ((end.y - start.y) / imgDim.y));
-    
-    std::vector<int> result(imgDim.x * (end_row - start_row));
-
-    for (int i = start_row; i < end_row; ++i) {
-        double y = start.y + i * step.y;
-        for (int j = 0; j < imgDim.x; ++j) {
-            double x = start.x + j * step.x;
-            std::complex<double> c(x, y);
-            result[(i - start_row) * imgDim.x + j] = mandelbrot(c, max_iter);
-        }
-    }
-
-    return result;
-}
+#include "Mandelbrot.h"
+#define DEF_MAX_ITERATIONS 2000
+#define DEF_IMAGE_WIDTH    3840
+#define DEF_IMAGE_HEIGHT   2160
 
 int main(int argc, char* argv[]) {
     MPI_Init(&argc, &argv);
@@ -48,61 +16,53 @@ int main(int argc, char* argv[]) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    /// Define os parâmetros do conjunto de Mandelbrot
-    Vector2 start = Vector2(-2.0, -1.5);
-    Vector2 end = Vector2(1.0, 1.5);
+    /// Define os parâmetros do conjunto de Mandelbrot, plano complexo
+    dvec2 start = dvec2(-2.0, -1.5);
+    dvec2 end   = dvec2( 1.0,  1.5);
 
     /// Define o tamanho da imagem = matriz
-    Int2 imgDim = Int2(800, 600);
+    ivec2 imgDim = ivec2(DEF_IMAGE_WIDTH, DEF_IMAGE_HEIGHT);
 
-    /// Divide a imagem (trabalho) em fatias iguais para cada processo
+    /// Divide a imagem (trabalho) em fatias iguais (linhas) para cada processo
     int chunckSize = imgDim.y / size;
+    /// Calcula a linha inicial e a linha final com base no rank atual
     int startRow = rank * chunckSize;
-    int endRow = startRow + chunckSize;
+    int endRow   = startRow + chunckSize;
  
     /// Calcula a fatia recebida, todos os processos vao trabalhar
-    std::vector<int> local_result = calculate_mandelbrot(start, end, imgDim, DEF_MAX_ITERATIONS, startRow, endRow);
+    double startTimeProcess = MPI_Wtime();
+    std::vector<int> local_result = CalculateMandelbrot(start, end, imgDim, DEF_MAX_ITERATIONS, startRow, endRow);
+    double endTimeProcess = MPI_Wtime();
+    double timeProcess = endTimeProcess - startTimeProcess;
+    std::cout << "O processo " << rank << " levou " << timeProcess << " segundos." << std::endl;
 
     /// Coleta os resultados de todos os processos no processo raiz
     std::vector<int> gathered_result(imgDim.x * imgDim.y);
     MPI_Gather(&local_result[0], local_result.size(), MPI_INT, &gathered_result[0], local_result.size(), MPI_INT, 0, MPI_COMM_WORLD);
 
     if (rank == 0) {
+        /// Cria uma imagem com base na matriz de pixels iterados
         BMP image;
         image.SetSize(imgDim.x, imgDim.y);
 
-        RGBApixel black;
-        black.Red = 0;
-        black.Green = 0;
-        black.Blue = 0;
-
-        RGBApixel white;
-        white.Red = 255;
-        white.Green = 255;
-        white.Blue = 255;
-
-        for (int i = 0; i < imgDim.y; ++i) {
-            for (int j = 0; j < imgDim.x; ++j) {
-                int index = i * imgDim.x + j;
-                int value = gathered_result[index];
+        for (int row = 0; row < imgDim.y; ++row) {
+            for (int coll = 0; coll < imgDim.x; ++coll) {
+                int index = row * imgDim.x + coll;
                 RGBApixel color;
 
-                if (value == DEF_MAX_ITERATIONS) {
-                    color = black;
+                if ((int)gathered_result[index] == DEF_MAX_ITERATIONS) {
+                    color.Red   = 0;
+                    color.Green = 0;
+                    color.Blue  = 0;
                 }
-                else {
-                    int red = (value * 10) % 256;
-                    int green = (value * 5) % 256;
-                    int blue = (value * 2) % 256;
-                    color.Red = red;
-                    color.Green = green;
-                    color.Blue = blue;
+                else {                    
+                    color.Red   = ((int)gathered_result[index] * 9)  % 256;
+                    color.Green = ((int)gathered_result[index] * 2)  % 256;;
+                    color.Blue  = ((int)gathered_result[index] * 11) % 256;;
                 }
-
-                image.SetPixel(j, i, color);
+                image.SetPixel(coll, row, color);
             }
         }
-
         image.WriteToFile("mandelbrot.bmp");
     }
 
