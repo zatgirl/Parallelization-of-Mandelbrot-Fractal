@@ -10,3 +10,7 @@
 .vs/MPIProject/v16/Browse.VC.db
 .vs/MPIProject/v16/.suo
 .vs/MPIProject/v16/ipch/AutoPCH/5c4fc1b9271cf10/MULT.ipch
+x64/Debug/mandelbrot_4K_11p.bmp
+x64/Debug/mandelbrot_8K_11p.bmp
+x64/Debug/mandelbrot_20K_11p.bmp
+x64/Debug/mandelbrot_40K_11p.bmp
