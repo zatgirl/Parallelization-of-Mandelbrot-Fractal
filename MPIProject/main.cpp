@@ -11,7 +11,7 @@
 
 int main(int argc, char* argv[]) {
     MPI_Init(&argc, &argv);
-
+    double startTime = MPI_Wtime();
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -40,6 +40,9 @@ int main(int argc, char* argv[]) {
     std::vector<int> gathered_result(imgDim.x * imgDim.y);
     MPI_Gather(&local_result[0], local_result.size(), MPI_INT, &gathered_result[0], local_result.size(), MPI_INT, 0, MPI_COMM_WORLD);
 
+    double endTime = MPI_Wtime();
+    double time = endTime - startTime;    
+
     if (rank == 0) {
         /// Cria uma imagem com base na matriz de pixels iterados
         BMP image;
@@ -64,6 +67,7 @@ int main(int argc, char* argv[]) {
             }
         }
         image.WriteToFile("mandelbrot.bmp");
+        std::cout << "O programa levou " << time << " segundos." << std::endl;
     }
 
     MPI_Finalize();

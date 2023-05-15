@@ -1,5 +1,6 @@
 #include "Mandelbrot.h"
 
+/// https://en.wikipedia.org/wiki/Mandelbrot_set
 /// <summary>
 /// Calcula o número de iterações necessárias para determinar se um ponto do plano complexo
 /// pertence ao conjunto de Mandelbrot, iterando sobre a fórmula z(n+1) = z(n)^2 + point, onde z(0) = point
