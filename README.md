@@ -20,7 +20,7 @@
 </p>
 
 ```shell
-git clone https://github.com/zatgirl/Parallelization-of-Mandelbrot-Fractal/
+git clone 'https://github.com/jvlima-ufsm/t1-zatgirl'
 ```
 
 <a>Navigate to the directory</a>

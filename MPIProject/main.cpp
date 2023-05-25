@@ -6,8 +6,8 @@
 #include "MathHelpers.h"
 #include "Mandelbrot.h"
 #define DEF_MAX_ITERATIONS 1000
-#define DEF_IMAGE_WIDTH    800
-#define DEF_IMAGE_HEIGHT   600
+#define DEF_IMAGE_WIDTH    900
+#define DEF_IMAGE_HEIGHT   800
 
 int main(int argc, char* argv[]) {
     MPI_Init(&argc, &argv);
@@ -31,14 +31,14 @@ int main(int argc, char* argv[]) {
  
     /// Calcula a fatia recebida, todos os processos vao trabalhar
     double startTimeProcess = MPI_Wtime();
-    std::vector<int> local_result = CalculateMandelbrot(start, end, imgDim, DEF_MAX_ITERATIONS, startRow, endRow);
+    std::vector<int> mandelbrotChuck = CalculateMandelbrot(start, end, imgDim, DEF_MAX_ITERATIONS, startRow, endRow);
     double endTimeProcess = MPI_Wtime();
     double timeProcess = endTimeProcess - startTimeProcess;
     std::cout << "O processo " << rank << " levou " << timeProcess << " segundos." << std::endl;
 
     /// Coleta os resultados de todos os processos no processo raiz
-    std::vector<int> gathered_result(imgDim.x * imgDim.y);
-    MPI_Gather(&local_result[0], local_result.size(), MPI_INT, &gathered_result[0], local_result.size(), MPI_INT, 0, MPI_COMM_WORLD);
+    std::vector<int> mandelbrotResult(imgDim.x * imgDim.y);
+    MPI_Gather(&mandelbrotChuck[0], mandelbrotChuck.size(), MPI_INT, &mandelbrotResult[0], mandelbrotChuck.size(), MPI_INT, 0, MPI_COMM_WORLD);
 
     double endTime = MPI_Wtime();
     double time = endTime - startTime;    
@@ -53,15 +53,15 @@ int main(int argc, char* argv[]) {
                 int index = row * imgDim.x + coll;
                 RGBApixel color;
 
-                if ((int)gathered_result[index] == DEF_MAX_ITERATIONS) {
+                if ((int)mandelbrotResult[index] == DEF_MAX_ITERATIONS) {
                     color.Red   = 0;
                     color.Green = 0;
                     color.Blue  = 0;
                 }
                 else {                    
-                    color.Red   = ((int)gathered_result[index] * 9)  % 256;
-                    color.Green = ((int)gathered_result[index] * 2)  % 256;;
-                    color.Blue  = ((int)gathered_result[index] * 11) % 256;;
+                    color.Red   = ((int)mandelbrotResult[index] * 9)  % 256;
+                    color.Green = ((int)mandelbrotResult[index] * 2)  % 256;;
+                    color.Blue  = ((int)mandelbrotResult[index] * 11) % 256;;
                 }
                 image.SetPixel(coll, row, color);
             }
